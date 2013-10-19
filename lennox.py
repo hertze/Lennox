@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 # Get the filename
@@ -73,7 +74,12 @@ print "Output written to *treesaver-output-pdf\n"
 
 latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{treesaver-output.pdf}\n\n\\end{document}"
 
-f = open("mounted-file.tex", "w")
+f = open("mounted-file.tex", "wb")
 f.write(latex)
+f.close()
 
 print "LaTeX-file written to *mounted-file.tex*\nDone!"
+
+os.system("xelatex mounted-file.tex")
+print ("\nYour file has been typeset.")
+os.system("open mounted-file.pdf")
