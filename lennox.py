@@ -10,10 +10,16 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 filename = ""
 
 if len(sys.argv) < 2:
-    while (len(filename) == 0 ): 
-        filename = raw_input("\n> Filename? ")
+    print ("\nThis is L E N N O X")
+    print ("\n---------------------------------------------------------\n")
+    print ("\nHello,\n")
+    while (len(filename) == 0 ):
+        filename = raw_input("What file shall I work with? ")
 else:
     filename = sys.argv[1]
+    
+filenamecomps = filename.partition(".")
+filetitle = filenamecomps[0] # Lets find out the name before the first period
 
 output = PdfFileWriter()
 input1 = PdfFileReader(open(filename, "rb"))
@@ -30,18 +36,20 @@ midpoint = q / 2
 for num in range(input1.getNumPages()):
         output.addPage(input1.getPage(num))
 for num in range(0, rest):
-        output.addPage(input2.getPage(1))
+        output.addPage(input2.getPage(0))
 
-outputStream = file("appended.pdf", "wb") # Write the appended file
+outputStream = file("temp-1.pdf", "wb") # Write the appended file
 output.write(outputStream)
 outputStream.close()
 
 # Now, let's rearrange that newly-saved PDF
 
 output = PdfFileWriter()
-input3 = PdfFileReader(open("appended.pdf", "rb"))  
+input3 = PdfFileReader(open("temp-1.pdf", "rb"))  
 
-print "%d pages in file.\n" % total_n
+print "\nThere are %d pages in this file.\n" % total_n
+
+print "\nRearranging..."
 
 # We'll divide the PDF in two stacks, where the first stack gets printed on the left side of the physical paper and the second stack on the right side.
 
@@ -66,20 +74,28 @@ while n < midpoint:
 
 
 # finally, write "output" to document-output.pdf
-outputStream = file("treesaver-output.pdf", "wb")
+outputStream = file("temp-2.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 
-print "Output written to *treesaver-output-pdf\n"
+print "\nDone."
 
-latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{treesaver-output.pdf}\n\n\\end{document}"
+print "\nWriting LaTeX..."
 
-f = open("mounted-file.tex", "wb")
+latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{temp-2.pdf}\n\n\\end{document}"
+
+f = open("temp-3.tex", "wb")
 f.write(latex)
 f.close()
 
-print "LaTeX-file written to *mounted-file.tex*\nDone!"
+print "\nDone."
 
-os.system("xelatex mounted-file.tex")
-print ("\nYour file has been typeset.")
-os.system("open mounted-file.pdf")
+print "\nTypesetting..."
+
+os.system("xelatex temp-3.tex")
+print ("\nDone.")
+os.system("mv temp-3.pdf " + filetitle + "-lennoxed.pdf") # Rename temp-file to real filename
+os.system("open " + filetitle + "-lennoxed.pdf") # Open the resulting PDF
+print "\nCleaning up..."
+os.system("rm temp*.*") # Delete all temp files
+print "\nAll done. Have a nice day!"
