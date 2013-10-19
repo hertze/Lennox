@@ -13,10 +13,10 @@ This is a command-line utility, written in Python 2.7.
 
 Run in like so:
 
-´python lennox.py´
+`python lennox.py`
 
 for a minimal interface, or simply:
 
-´python lennox.py <file.pdf>´
+`python lennox.py <file.pdf>`
 
 for no interface at all.
