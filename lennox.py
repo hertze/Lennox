@@ -1,13 +1,14 @@
 #! /usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
-import sys
-import os
+import sys, os, subprocess, shlex
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 # Get the filename
 
 filename = ""
+
+tempfolder = "/Users/Joakim/Arkiv/Lennox/"
 
 if len(sys.argv) < 2:
     print ("\nThis is L E N N O X")
@@ -18,12 +19,15 @@ if len(sys.argv) < 2:
 else:
     filename = sys.argv[1]
     
-filenamecomps = filename.partition(".")
-filetitle = filenamecomps[0] # Lets find out the name before the first period
+fileparts = filename.rpartition("/")
+filepath = fileparts[0] + fileparts[1]
+fileman = fileparts[2]
+explodedfileman = fileman.rpartition(".")
+filetitle = explodedfileman[0]    
 
 output = PdfFileWriter()
 input1 = PdfFileReader(open(filename, "rb"))
-input2 = PdfFileReader(open("blank-a5.pdf", "rb")) # blank pages
+input2 = PdfFileReader(open("/Users/Joakim/Arkiv/Lennox/blank-a5.pdf", "rb")) # blank pages
 
 # Let's check the file
 
@@ -38,14 +42,14 @@ for num in range(input1.getNumPages()):
 for num in range(0, rest):
         output.addPage(input2.getPage(0))
 
-outputStream = file("temp-1.pdf", "wb") # Write the appended file
+outputStream = file(tempfolder + "temp-1.pdf", "wb") # Write the appended file
 output.write(outputStream)
 outputStream.close()
 
 # Now, let's rearrange that newly-saved PDF
 
 output = PdfFileWriter()
-input3 = PdfFileReader(open("temp-1.pdf", "rb"))  
+input3 = PdfFileReader(open(tempfolder + "temp-1.pdf", "rb"))  
 
 print "\nThere are %d pages in this file.\n" % total_n
 
@@ -74,7 +78,7 @@ while n < midpoint:
 
 
 # finally, write "output" to document-output.pdf
-outputStream = file("temp-2.pdf", "wb")
+outputStream = file(tempfolder + "temp-2.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 
@@ -82,9 +86,9 @@ print "\nDone."
 
 print "\nWriting LaTeX..."
 
-latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{temp-2.pdf}\n\n\\end{document}"
+latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{" + tempfolder + "temp-2.pdf}\n\n\\end{document}"
 
-f = open("temp-3.tex", "wb")
+f = open(tempfolder + "lennoxed.tex", "wb")
 f.write(latex)
 f.close()
 
@@ -92,10 +96,13 @@ print "\nDone."
 
 print "\nTypesetting..."
 
-os.system("xelatex temp-3.tex")
+proc=subprocess.Popen(shlex.split("/usr/texbin/xelatex " + tempfolder + "lennoxed.tex"))
+proc.communicate()
+
+#os.system("/usr/texbin/xelatex " + tempfolder + "lennoxed.tex")
 print ("\nDone.")
-os.system("mv temp-3.pdf " + filetitle + "-lennoxed.pdf") # Rename temp-file to real filename
-os.system("open " + filetitle + "-lennoxed.pdf") # Open the resulting PDF
+# os.system("mv " + tempfolder + "temp-3.pdf " + tempfolder + "lennoxed.pdf") # Rename temp-file to real filename
+os.system("open " + tempfolder + "lennoxed.pdf") # Open the resulting PDF
 print "\nCleaning up..."
-os.system("rm temp*.*") # Delete all temp files
+# os.system("rm " + tempfolder + "temp*.*") # Delete all temp files
 print "\nAll done. Have a nice day!"
