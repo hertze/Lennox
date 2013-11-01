@@ -96,10 +96,11 @@ print "\nDone."
 
 print "\nTypesetting..."
 
-proc=subprocess.Popen(shlex.split("/usr/texbin/xelatex " + tempfolder + "lennoxed.tex"))
-proc.communicate()
 
-#os.system("/usr/texbin/xelatex " + tempfolder + "lennoxed.tex")
+p = subprocess.Popen(["xelatex", tempfolder + "lennoxed.tex"], shell=False, env={'PATH': '/usr/texbin'}, cwd=tempfolder)
+
+p.wait()
+
 print ("\nDone.")
 # os.system("mv " + tempfolder + "temp-3.pdf " + tempfolder + "lennoxed.pdf") # Rename temp-file to real filename
 os.system("open " + tempfolder + "lennoxed.pdf") # Open the resulting PDF
