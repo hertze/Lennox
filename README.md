@@ -20,3 +20,5 @@ for a minimal interface, or simply:
 `python lennox.py <file.pdf>`
 
 for no interface at all.
+
+I hole-heartedly recommend running this script from an Automator print plugin, though.
