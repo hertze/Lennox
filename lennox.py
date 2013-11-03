@@ -17,13 +17,7 @@ if len(sys.argv) < 2:
     while (len(filename) == 0 ):
         filename = raw_input("What file shall I work with? ")
 else:
-    filename = sys.argv[1]
-    
-fileparts = filename.rpartition("/")
-filepath = fileparts[0] + fileparts[1]
-fileman = fileparts[2]
-explodedfileman = fileman.rpartition(".")
-filetitle = explodedfileman[0]    
+    filename = sys.argv[1]   
 
 output = PdfFileWriter()
 input1 = PdfFileReader(open(filename, "rb"))
