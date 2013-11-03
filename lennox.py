@@ -1,14 +1,14 @@
 #! /usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
-import sys, os, subprocess, shlex
+import sys, subprocess
 from PyPDF2 import PdfFileWriter, PdfFileReader
+
+tempfolder = "/Users/Joakim/Arkiv/Lennox/" # Set the working directory for the script
 
 # Get the filename
 
 filename = ""
-
-tempfolder = "/Users/Joakim/Arkiv/Lennox/"
 
 if len(sys.argv) < 2:
     print ("\nThis is L E N N O X")
@@ -88,7 +88,7 @@ print "\nWriting LaTeX..."
 
 latex = "\\documentclass[11pt,titlepage,a4paper]{article}\n\n\\usepackage{pdfpages}\n\n\\begin{document}\n\n\\includepdf[pages=-, landscape, noautoscale=false, nup=1x2]{" + tempfolder + "temp-2.pdf}\n\n\\end{document}"
 
-f = open(tempfolder + "lennoxed.tex", "wb")
+f = open(tempfolder + "temp-3.tex", "wb")
 f.write(latex)
 f.close()
 
@@ -97,13 +97,18 @@ print "\nDone."
 print "\nTypesetting..."
 
 
-p = subprocess.Popen(["xelatex", tempfolder + "lennoxed.tex"], shell=False, env={'PATH': '/usr/texbin'}, cwd=tempfolder)
+p = subprocess.Popen(["xelatex", tempfolder + "temp-3.tex"], shell=False, env={'PATH': '/usr/texbin'}, cwd=tempfolder)
 
 p.wait()
 
 print ("\nDone.")
-# os.system("mv " + tempfolder + "temp-3.pdf " + tempfolder + "lennoxed.pdf") # Rename temp-file to real filename
-os.system("open " + tempfolder + "lennoxed.pdf") # Open the resulting PDF
+
 print "\nCleaning up..."
-# os.system("rm " + tempfolder + "temp*.*") # Delete all temp files
+
+subprocess.call("mv " + tempfolder + "temp-3.pdf " + tempfolder + "lennoxed.pdf", shell=True) # Rename temp-file to real filename
+
+subprocess.call("open " + tempfolder + "lennoxed.pdf", shell=True) # Open the resulting PDF
+
+subprocess.call("rm " + tempfolder + "temp*.*", shell=True) # Delete all temp files
+
 print "\nAll done. Have a nice day!"
