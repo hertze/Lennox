@@ -11,7 +11,7 @@ This saves trees and patience, I believe.
 
 This is a command-line utility, written in Python 2.7. Before you use it, you need to specify the working directory for the script (I suggest the same folder as you have put the script itself in) and the path to a PDF with blank pages (blank-a5, included with the script). The script is dependent on [PyPDF2](https://github.com/mstamy2/PyPDF2).
 
-Run in like so:
+Run it like so:
 
 `python lennox.py`
 
@@ -21,4 +21,4 @@ for a minimal interface, or simply:
 
 for no interface at all.
 
-For maximum usefulness (if you are a Mac OS X user) I recommend using running this script from an Automator print plugin-though. You may then run it on any document presented in the standard print dialog.
+For maximum usefulness (if you are a Mac OS X user) I recommend using running this script from an Automator print plugin. You may then run it on any document presented in the standard print dialog.
